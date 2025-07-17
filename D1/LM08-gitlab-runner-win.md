@@ -84,6 +84,20 @@ Absolutely! Here’s a **step-by-step guide** for **setting up a GitLab Runner f
 
 ---
 
+## ** Single command **
+
+```
+docker run --rm -t \
+  -v /srv/gitlab-runner/config:/etc/gitlab-runner \
+  gitlab/gitlab-runner:latest register \
+  --non-interactive \
+  --url "http://host.docker.internal:8080" \
+  --registration-token "YOUR_REGISTRATION_TOKEN" \
+  --executor "docker" \
+  --description "docker-runner" \
+  --docker-image "alpine:latest"
+```
+
 ## **4. Verify Runner Registration**
 
 * Go to **GitLab → Project → Settings → CI/CD → Runners**.
