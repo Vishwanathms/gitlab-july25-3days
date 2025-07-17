@@ -1,6 +1,4 @@
-Absolutely! Here’s a **step-by-step hands-on lab manual** on managing variables and secrets in GitLab CI/CD, covering **protected vs. masked variables** and **project-level vs. group-level scopes**—with a practical scenario for context.
 
----
 
 ## **Scenario:**
 
