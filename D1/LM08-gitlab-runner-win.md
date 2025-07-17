@@ -44,9 +44,9 @@ Absolutely! Here’s a **step-by-step guide** for **setting up a GitLab Runner f
 4. **Run GitLab Runner container:**
 
    ```bash
-   docker run -d --name gitlab-runner --restart always `
-     -v C:\gitlab-runner:/etc/gitlab-runner `
-     -v //var/run/docker.sock:/var/run/docker.sock `
+   docker run -d --name gitlab-runner --restart always ^
+     -v C:\gitlab-runner:/etc/gitlab-runner ^
+     -v //var/run/docker.sock:/var/run/docker.sock ^
      gitlab/gitlab-runner:latest
    ```
 
