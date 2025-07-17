@@ -91,7 +91,7 @@ docker run --rm -t ^
   -v /srv/gitlab-runner/config:/etc/gitlab-runner ^
   gitlab/gitlab-runner:latest register ^
   --non-interactive ^
-  --url "http://host.docker.internal:8080" ^
+  --url "http://host.docker.internal:8080" ^ ## The hostname should be gitlab container ip 
   --registration-token "YOUR_REGISTRATION_TOKEN" ^
   --executor "docker" ^
   --description "docker-runner" ^
