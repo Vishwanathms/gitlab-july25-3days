@@ -1,7 +1,3 @@
-Great questions!
-Let’s break it down:
-
----
 
 ## **1. How to Create "Previous Job" Condition in GitLab CI/CD**
 
@@ -113,6 +109,3 @@ notify:
 * `test` will be **skipped** because `build` failed.
 * `notify` **always runs**, even if previous jobs failed.
 
----
-
-**Let me know if you want a more advanced use-case or YAML example!**

@@ -1,0 +1,182 @@
+Here is a **step-by-step lab manual** for:
+
+🧪 **Hands-On Lab: Writing a GitLab CI Job to Apply Terraform Changes to a Dev Cluster**
+**Environment:**
+
+* GitLab server on Docker container
+* GitLab runner on Docker container
+* Dev cluster (e.g., AWS, Azure, or local Kubernetes)
+
+---
+
+## ✅ **Objective**
+
+Create a GitLab CI/CD pipeline that uses Terraform to provision or update infrastructure in a **dev environment** (e.g., a dev VPC, Kubernetes cluster, or test resource group).
+
+---
+
+## 🧰 **Pre-requisites**
+
+1. ✅ GitLab CE/EE running in Docker
+2. ✅ GitLab Runner registered and running (Docker executor preferred)
+3. ✅ A sample Terraform project (`main.tf` present)
+4. ✅ AWS/Azure credentials (or local cloud CLI configured)
+5. ✅ `.gitlab-ci.yml` in your repo
+6. ✅ Terraform installed in the runner container (or use Terraform Docker image)
+
+---
+
+## 🧪 **Step-by-Step Lab Guide**
+
+---
+
+### 🔹 Step 1: Clone/Create Your GitLab Project
+
+```bash
+git clone http://localhost:8080/<your-namespace>/tf-demo.git
+cd tf-demo
+```
+
+Create a simple Terraform config:
+
+```hcl
+# main.tf
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_s3_bucket" "demo" {
+  bucket = "gitlab-terraform-demo-bucket-${random_id.bucket.hex}"
+  acl    = "private"
+
+  tags = {
+    Environment = "Dev"
+  }
+}
+
+resource "random_id" "bucket" {
+  byte_length = 4
+}
+```
+
+---
+
+### 🔹 Step 2: Add Terraform Backend and Variables (Optional)
+
+```hcl
+# backend.tf (optional)
+terraform {
+  backend "local" {
+    path = "./terraform.tfstate"
+  }
+}
+```
+
+---
+
+### 🔹 Step 3: Add `.gitlab-ci.yml` for Terraform
+
+```yaml
+stages:
+  - validate
+  - plan
+  - apply
+
+variables:
+  TF_ROOT: "."
+
+validate:
+  stage: validate
+  image: hashicorp/terraform:1.6.6
+  script:
+    - terraform -chdir=$TF_ROOT init
+    - terraform -chdir=$TF_ROOT validate
+
+plan:
+  stage: plan
+  image: hashicorp/terraform:1.6.6
+  script:
+    - terraform -chdir=$TF_ROOT init
+    - terraform -chdir=$TF_ROOT plan -out=tfplan
+  artifacts:
+    paths:
+      - $TF_ROOT/tfplan
+
+apply:
+  stage: apply
+  image: hashicorp/terraform:1.6.6
+  script:
+    - terraform -chdir=$TF_ROOT apply -auto-approve tfplan
+  when: manual
+  environment:
+    name: dev
+```
+
+---
+
+### 🔹 Step 4: Add GitLab CI/CD Variables (AWS Credentials)
+
+In your GitLab project:
+
+1. Go to **Settings > CI/CD > Variables**
+2. Add:
+
+   * `AWS_ACCESS_KEY_ID`
+   * `AWS_SECRET_ACCESS_KEY`
+
+For Azure/GCP: add corresponding environment variables (`ARM_CLIENT_ID`, etc.)
+
+---
+
+### 🔹 Step 5: Commit and Push
+
+```bash
+git add .
+git commit -m "Add Terraform CI/CD pipeline"
+git push origin main
+```
+
+---
+
+### 🔹 Step 6: Run and Observe Pipeline
+
+1. Navigate to **CI/CD → Pipelines**
+2. You’ll see:
+
+   * ✅ validate
+   * ✅ plan
+   * 🟡 apply (manual)
+3. Click “play” on **apply** to provision infrastructure
+
+---
+
+### 🔹 Step 7: Verify Resources in Cloud Console
+
+Login to your AWS/Azure/GCP console → Verify that the resources (e.g., S3 bucket) are created in the dev environment.
+
+---
+
+### 🧼 Step 8: Clean Up (Optional)
+
+Run the following job or manually:
+
+```yaml
+destroy:
+  stage: apply
+  image: hashicorp/terraform:1.6.6
+  script:
+    - terraform -chdir=$TF_ROOT destroy -auto-approve
+  when: manual
+```
+
+---
+
+## 📌 **Best Practices**
+
+| Practice                                | Benefit                         |
+| --------------------------------------- | ------------------------------- |
+| Store `terraform.tfstate` remotely      | Enables collaboration           |
+| Use `terraform plan` artifact           | Verifies changes before apply   |
+| Use `when: manual` for apply            | Avoids unintended infra changes |
+| Store secrets in GitLab CI/CD variables | Secures sensitive data          |
+
