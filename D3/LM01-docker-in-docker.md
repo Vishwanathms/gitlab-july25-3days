@@ -199,9 +199,9 @@ You now have a streamlined pipeline in GitLab CI/CD that builds Docker images an
 ```
 docker run --detach ^
   --hostname gitlab.local ^
-  --publish 8080:80 ^
+  --publish 81:80 ^
   --publish 5050:5050 ^
-  --publish 2222:22 ^
+  --publish 2223:22 ^
   --name gitlab-server ^
   --restart always ^
   --volume "C:\gitlab\config:/etc/gitlab" ^
