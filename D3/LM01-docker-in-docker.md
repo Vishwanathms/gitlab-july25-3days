@@ -194,3 +194,19 @@
 You now have a streamlined pipeline in GitLab CI/CD that builds Docker images and pushes them to GitLab’s Container Registry.
 
 **Ready for next steps or want to explore advanced workflows (multi-stage builds, automated tests, etc.)? Just ask!**
+
+
+```
+docker run --detach ^
+  --hostname gitlab.local ^
+  --publish 8080:80 ^
+  --publish 5050:5050 ^
+  --publish 2222:22 ^
+  --name gitlab-server ^
+  --restart always ^
+  --volume "C:\gitlab\config:/etc/gitlab" ^
+  --volume "C:\gitlab\logs:/var/log/gitlab" ^
+  --volume "C:\gitlab\data:/var/opt/gitlab" ^
+  gitlab/gitlab-ce:latest
+
+```
