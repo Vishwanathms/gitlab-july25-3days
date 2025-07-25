@@ -1,6 +1,3 @@
-Absolutely! Here is your **fine-tuned lab manual** for “Docker Workflows in CI with GitLab,” assuming **GitLab and a Docker-based GitLab Runner are already running and registered** with Docker executor (with access to the Docker socket or Docker-in-Docker).
-
----
 
 # **Lab Manual: Building & Pushing Docker Images with GitLab CI/CD (Assuming GitLab on Docker)**
 
